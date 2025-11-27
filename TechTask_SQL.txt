@@ -1,0 +1,31 @@
+Решение:
+
+Вопрос 1:
+
+SELECT COUNT(order_id) AS total_orders
+FROM orders
+WHERE order_date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
+  AND order_date < DATE_TRUNC('month', CURRENT_DATE);
+
+
+Вопрос 2:
+
+SELECT ROUND(SUM(p.price * oi.quantity), 2) AS total_revenue
+FROM order_items oi
+JOIN orders o ON oi.order_id = o.order_id
+JOIN products p ON oi.product_id = p.product_id
+WHERE o.status = 'completed'
+  AND o.order_date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '1 month')
+  AND o.order_date < DATE_TRUNC('month', CURRENT_DATE);
+
+
+Вопрос 3:
+
+SELECT 
+  p.name,
+  SUM(oi.quantity) AS total_quantity
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+GROUP BY p.name
+ORDER BY total_quantity DESC
+LIMIT 1;
